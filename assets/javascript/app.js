@@ -42,6 +42,12 @@ $(function () {
                 success: function (result) {
                     // CallBack(result);
 
+                    // Scroll to voice section once results are produced for the image
+                    $('html, body').stop().animate({
+                        scrollTop: $("#voice").offset().top
+                    }, 1500, 'easeInOutExpo');
+
+                    
                     var faceResults = result.responses[0].faceAnnotations[0];
                     var anger = faceResults.angerLikelihood;
                     var joy = faceResults.joyLikelihood;
@@ -62,6 +68,7 @@ $(function () {
                     if (sorrow === "LIKELY" || sorrow === "POSSIBLE" || sorrow === "VERY_LIKELY") {
                         x = 'sad';
                     }
+
                     googleVoice(x);
 
                 },
@@ -104,12 +111,11 @@ $(function () {
                 });
 
                 function f() {
-                    $("#button").text('stop');
                     speechRecognizer.start();
                     speechRecognizer.onresult = function (event) {
                         for (var i = event.resultIndex; i < event.results.length; ++i) {
                             interimResults = event.results[i][0].transcript;
-                            x = $('textarea').val();
+                            mytext = $('#SpeechText').val();
                             console.log(event.results[i][0].transcript);
                             if (event.results[i].isFinal) {
                                 console.log(event.results[i].transcript);
@@ -131,12 +137,17 @@ $(function () {
                                 if (compare2string(event.results[i][0].transcript, "I want to go some where")) {
                                     travel();
                                 }
-                                $('textarea').val(x + " " + interimResults);
-                                console.log("final results: " + event.results[i][0].transcript);
+                                $('#SpeechText').val(mytext + " " + interimResults);
+                                $('#SpeechText').val(event.results[i][0].transcript);
                             }
                         }
                     }
+                    $("#Stop").on('click', function () {
+                        speechRecognizer.stop();
+                        $('#SpeechText').val("");
+                    });
                 }
+
             }
 
             function compare2string(x, y) {
