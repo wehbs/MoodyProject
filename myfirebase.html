@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+  <title>P</title>
+  <style>
+  input{
+       width: 400px;
+    height: 25px;}
+    div{
+      display: table-caption;
+    }
+    button{
+      border: none;
+      padding: 10px;
+      margin: 10px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id='A'>
+    <label>Username</label>
+    <input type="text" name="" id="username">
+    <label>Password</label>
+    <input type='text' id="password">
+    <button id='Connect'>Connect</button>
+  </div>
+    <div id='B'>
+    <label>Username</label>
+    <input type="text" name="" id="Username">
+    <label>Email</label>
+    <input type='text' id="Email">
+    <label>Password</label>
+    <input type='text' id="Password">
+    <button id='Subscribe'>Subscribe</button>
+  </div>
+</body>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBjtiq0vAqMLSYipkvVn7FAhMjz8w87o1w",
+    authDomain: "prefab-icon-181104.firebaseapp.com",
+    databaseURL: "https://prefab-icon-181104.firebaseio.com",
+    projectId: "prefab-icon-181104",
+    storageBucket: "prefab-icon-181104.appspot.com",
+    messagingSenderId: "418253791179"
+  };
+  firebase.initializeApp(config);
+  database=firebase.database();
+  ref = database.ref();
+  $("#Connect").on('click',function(){
+  var user=$('#username').val().trim();
+  $('#username').val('');
+  var Password=$('#password').val().trim();
+  $('#password').val('');
+        if (user === "" || Password === "") {
+        alert('Please enter Username and Password.');}
+        else{
+       var authenSucces=false;
+       ref.once('value', function(snapshot) {
+       $.each(snapshot.val(), function(k, v) {
+
+        if((v.Username===user)&&(v.Password===Password))
+        {
+         authenSucces=true;
+
+        }
+  });
+       if(authenSucces===true)
+       {
+        alert('Succesfully authentifacated');
+       }
+        if(authenSucces===false)
+       {
+        alert('User not found');
+       }
+       });
+     }
+  }); 
+  $('#Subscribe').on('click',function(){
+    subscribe();
+  });
+  function subscribe(){
+    var Username=$('#Username').val().trim();
+    $('#Username').val('');
+    var Email=$('#Email').val().trim();
+    $('#Email').val('');
+    var Password=$('#Password').val().trim(); 
+    $('#Password').val('');
+    if (Username === "" || Password === "" || Email ==='')
+    {
+      alert('please fill the whole form');
+    }else{
+    ref.push({
+      Username:Username,
+      Email:Email,
+      Password:Password
+    });
+  }
+  } 
+
+</script>
+</html>
