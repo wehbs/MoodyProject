@@ -1,56 +1,47 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<head>
-	<title></title>
-
-
-
-<!DOCTYPE html>
-<html>
-<head>
-   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-   <meta charset="utf-8">
-   <title>Simple markers</title>
-<style>
-  /* Always set the map height explicitly to define the size of the div
-   * element that contains the map. */
-  #map {
-    height: 100%;
-  }
-  /* Optional: Makes the sample page fill the window. */
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-</style>
-</head>
-<body>
- <div id="map"></div>
-<script>
-
-  function initMap() {
-    var myLatLng = {lat: 38.881405, lng: -77.115903};
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 15,
-      center: myLatLng
-    });
-    
+   <head>
+   
+      <script type="text/javascript">
+       var mylocation;
+         function showLocation(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
             
+            alert("Latitude : " + latitude + " Longitude: " + longitude);
+         }
 
-    var marker = new google.maps.Marker({
-      position: myLatLng,
-      map: map,
-      title: 'HERE I AM!'
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXuZWgl7_8I8l436ttHm9Y_5zLLHSJF8I&callback=initMap">
-</script>
-</head>
-<body>
+         function errorHandler(err) {
+            if(err.code == 1) {
+               alert("Error: Access is denied!");
+            }
+            
+            else if( err.code == 2) {
+               alert("Error: Position is unavailable!");
+            }
+         }
+      
+         function getLocation(){
 
-</body>
+            if(navigator.geolocation){
+               // timeout at 60000 milliseconds (60 seconds)
+               var options = {timeout:60000};
+               navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+            }
+            
+            else{
+               alert("Sorry, browser does not support geolocation!");
+            }
+         }
+      
+      </script>
+    
+   </head>
+   <body>
+      
+      <form>
+         <input type="button" onclick="getLocation();" value="Get Location"/>
+      </form>
+      
+   </body>
 </html>
