@@ -373,12 +373,14 @@ a:focus {
     background-image: url(water.png);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: mic-animate 5s linear infinite;
+    animation: mic-animate 2s linear infinite;
     }
     @keyframes mic-animate{
-        0%{ background-position:0px;
+        0%{ background-position:700px;
         }
-        100%{background-position:1000px;
+        50%{background-position:500px;
+        }
+        100%{ background-position:400px;
         }
        
     }
