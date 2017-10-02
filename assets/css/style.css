@@ -367,3 +367,18 @@ a:focus {
     body {
         webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
     }
+    #mic{
+    padding: 20px;
+    font-size: 8.333333em;
+    background-image: url(water.png);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: mic-animate 5s linear infinite;
+    }
+    @keyframes mic-animate{
+        0%{ background-position:0px;
+        }
+        100%{background-position:1000px;
+        }
+       
+    }

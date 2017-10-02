@@ -104,7 +104,6 @@ $(function () {
                 });
 
                 function f() {
-                    $("#button").text('stop');
                     speechRecognizer.start();
                     speechRecognizer.onresult = function (event) {
                         for (var i = event.resultIndex; i < event.results.length; ++i) {
@@ -123,8 +122,8 @@ $(function () {
                                     break;
                                 }
                                 if (compare2string(event.results[i][0].transcript, "stop")) {
-                                    window.open("https://www.google.com/");
-                                    break;
+                                    speechRecognizer.stop();
+                                    
                                 }
                                 if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
                                     music();
