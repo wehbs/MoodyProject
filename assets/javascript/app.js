@@ -122,6 +122,10 @@ $(function () {
                                     window.open("https://www.google.com/");
                                     break;
                                 }
+                                if (compare2string(event.results[i][0].transcript, "stop")) {
+                                    window.open("https://www.google.com/");
+                                    break;
+                                }
                                 if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
                                     music();
                                 }

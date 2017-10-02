@@ -65,7 +65,7 @@
             </div>
             <div style="display:grid">
             <button type="button" id='Connect' class="btn btn-success">Connect</button>
-             <a href="#Subscribe" style="color: red;margin-top: 10px">
+             <a href="#Subscribe" style="color: red;margin-top: 10px;font-size: 18px">
              New Users must subscribe
              </a>
           </div>
@@ -110,6 +110,7 @@
     storageBucket: "prefab-icon-181104.appspot.com",
     messagingSenderId: "418253791179"
   };
+  $( document ).ready(function() {
   firebase.initializeApp(config);
   database=firebase.database();
   ref = database.ref();
@@ -130,7 +131,7 @@
          authenSucces=true;
 
         }
-  });
+        });
        if(authenSucces===true)
        {
         window.location.href='index.html';
@@ -151,26 +152,43 @@
     $('#Username').val('');
     var Email=$('#Email').val().trim();
     $('#Email').val('');
+    var Userexist=false;
+    ref.on('value', function(snapshot) {
+      $.each(snapshot.val(), function(k, v) {
+           if(v.Username==Username)
+           {
+           Userexist=true;
+           }
+           console.log(Userexist);
+      });
+     });
+     if (Userexist===true)
+     {
+      alert("this Username has been used");
+     }
+     else
+     {
     if($('#Password').val()===$('#con-Password').val())
-    {
+     {
     var Password=$('#Password').val().trim(); 
      }else{
-      $('#Password').val('');
-      $('#con-Password').val('')
       alert('please repeat');
      }
-    $('#Password').val('');
+     $('#Password').val('');
+     $('#con-Password').val('');
     if (Username === "" || Password === "" || Email ==='')
     {
       alert('please fill the whole form');
-    }else{
+    }else
+    {
       window.location.hash="#header";
-    ref.push({
+      ref.push({
       Username:Username,
       Email:Email,
-      Password:Password
-    });
-  }
+      Password:Password});
+   }
+} 
   } 
+  });
 </script>
 </html>
