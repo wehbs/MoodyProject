@@ -62,7 +62,8 @@ $(function () {
                     if (sorrow === "LIKELY" || sorrow === "POSSIBLE" || sorrow === "VERY_LIKELY") {
                         x = 'sad';
                     }
-                    googleVoice(x);
+                    window.location.hash="#voice";
+                     setTimeout(googleVoice(x), 1000);
 
                 },
                 error: function (error) {
@@ -98,7 +99,10 @@ $(function () {
                 speechRecognizer.lang = 'en-US';
                 speechRecognizer.maxAlternatives = 1;
 
-                $("#button").on('click', function () {
+                $("#mic").on('click', function () {
+                    console.log($(this));
+         
+                    $("#mic").css("animation", "mic-animate 2s linear infinite");
                     // event.preventDefault();
                     f();
                 });
@@ -115,15 +119,27 @@ $(function () {
                                 if (compare2string(event.results[i][0].transcript, "I m looking for some food")) {
                                     speechRecognizer.stop();
                                     speechSynthesis.speak(new SpeechSynthesisUtterance('go and  cook  some  food  for  your  self'));
-                                    $("#button").text('start');
                                 }
-                                if (compare2string(event.results[i][0].transcript, "go to google")) {
-                                    window.open("https://www.google.com/");
-                                    break;
+                                if (compare2string(event.results[i][0].transcript, "go")) {
+                                    window.open("https://www.google.com/search?source=hp&q="+x);
+                                     $('textarea').val("");
+                                     break;
                                 }
                                 if (compare2string(event.results[i][0].transcript, "stop")) {
                                     speechRecognizer.stop();
-                                    
+
+                                    $("#mic").css("animation", 'none');
+                                    break;
+                                }
+                                 if (compare2string(event.results[i][0].transcript, "delete")) {
+                                    var lastIndex = x.lastIndexOf(" ");
+                                    x= x.substring(0, lastIndex);
+                                    $('textarea').val(x);
+                                    break;
+                                }
+                                 if (compare2string(event.results[i][0].transcript, "delete all")) {
+                                    $('textarea').val("");
+                                    break;
                                 }
                                 if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
                                     music();
