@@ -21,6 +21,7 @@ $(document).ready(function () {
 
         reader.onloadend = function () {
             var convertedPic = reader.result;
+            // Removes the extra string characters before the /
             var sliceNum = convertedPic.indexOf(",") + 1;
             var convertedPicSlice = convertedPic.slice(sliceNum);
 
@@ -61,12 +62,12 @@ $(document).ready(function () {
                     console.log("Sorrow " + sorrow);
                     console.log("Surprise " + surprise);
 
-                    var x;
+                    var mood;
                     if (joy === "LIKELY" || joy === "POSSIBLE" || joy === "VERY_LIKELY") {
-                        x = 'happy';
+                        mood = 'happy';
                     }
                     if (sorrow === "LIKELY" || sorrow === "POSSIBLE" || sorrow === "VERY_LIKELY") {
-                        x = 'sad';
+                        mood = 'sad';
                     }
 
                     setTimeout(googleVoice(x), 1000);
@@ -122,7 +123,7 @@ $(document).ready(function () {
                             console.log(event.results[i][0].transcript);
                             if (event.results[i].isFinal) {
                                 console.log(event.results[i].transcript);
-                                if (compare2string(event.results[i][0].transcript, "I m looking for some food")) {
+                                if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
                                     speechRecognizer.stop();
                                     speechSynthesis.speak(new SpeechSynthesisUtterance('go and  cook  some  food  for  your  self'));
                                 }
