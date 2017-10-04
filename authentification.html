@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Added link to the jQuery Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <!-- Plugin jQuery Easing JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+  <!-- Link to external javaScript -->
+   <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+
+  <!-- Added link to the Bootstrap Library -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+
+  <!-- Custom Fonts -->
+  <script src="https://use.fontawesome.com/7c7cf4a181.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <title>Moody</title>
+
+</head>
+
+<body id="page-top" style="overflow:hidden" data-target=".navbar-fixed-top">
+
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand page-scroll" href="#page-top">
+          <i class="fa fa-hashtag"></i> <span class="light">Moody</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Intro Header -->
+  <header class="intro" id="header" >
+    <div class="intro-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <div class="form-group">
+              <label for="usr" style="font-size:15px">Username</label>
+              <input type="text" class="form-control" id="username">
+            </div>
+            <div class="form-group">
+              <label for="pwd" style="font-size:15px">Password</label>
+              <input type="password" class="form-control" id="password">
+            </div>
+            <div style="display:grid">
+            <button type="button" id='Connect' class="btn btn-success">Connect</button>
+             <a href="#Subscribe" style="color: red;margin-top: 10px;font-size: 18px">
+             New Users must subscribe
+             </a>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Upload photo Section -->
+  <section id="Subscribe" class="container content-section text-center">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+            <div class="form-group">
+              <label for="usr" style="font-size:15px">Username</label>
+              <input type="text" class="form-control" id="Username">
+            </div>
+             <div class="form-group">
+              <label for="Email" style="font-size:15px">Email</label>
+              <input type="text" class="form-control" id="Email">
+            </div>
+             <div class="form-group">
+              <label for="pwd" style="font-size:15px">Password</label>
+              <input type="password" class="form-control" id="Password">
+            </div>
+            <div class="form-group">
+              <label for="pwd" style="font-size:15px">Re-enter Password</label>
+              <input type="password" class="form-control" id="con-Password">
+            </div>
+            <button id="Submit" type="button" class="btn btn-success">Submit</button>
+      </div>
+    </div>
+  </section>
+</body>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBjtiq0vAqMLSYipkvVn7FAhMjz8w87o1w",
+    authDomain: "prefab-icon-181104.firebaseapp.com",
+    databaseURL: "https://prefab-icon-181104.firebaseio.com",
+    projectId: "prefab-icon-181104",
+    storageBucket: "prefab-icon-181104.appspot.com",
+    messagingSenderId: "418253791179"
+  };
+  $( document ).ready(function() {
+  firebase.initializeApp(config);
+  database=firebase.database();
+  ref = database.ref();
+  $("#Connect").on('click',function(){
+  var user=$('#username').val().trim();
+  $('#username').val('');
+  var Password=$('#password').val().trim();
+  $('#password').val('');
+        if (user === "" || Password === "") {
+        alert('Please enter Username and Password.');}
+        else{
+       var authenSucces=false;
+       ref.once('value', function(snapshot) {
+       $.each(snapshot.val(), function(k, v) {
+
+        if((v.Username===user)&&(v.Password===Password))
+        {
+         authenSucces=true;
+
+        }
+        });
+       if(authenSucces===true)
+       {
+        window.location.href='index.html';
+        
+       }
+        if(authenSucces===false)
+       {
+        alert('User not found');
+       }
+       });
+     }
+  }); 
+  $('#Submit').on('click',function(){
+    subscribe();
+  });
+  function subscribe(){
+    var Username=$('#Username').val().trim();
+    $('#Username').val('');
+    var Email=$('#Email').val().trim();
+    $('#Email').val('');
+    var Userexist=false;
+    ref.on('value', function(snapshot) {
+      $.each(snapshot.val(), function(k, v) {
+           if(v.Username==Username)
+           {
+           Userexist=true;
+           }
+           console.log(Userexist);
+      });
+     });
+     if (Userexist===true)
+     {
+      alert("this Username has been used");
+     }
+     else
+     {
+    if($('#Password').val()===$('#con-Password').val())
+     {
+    var Password=$('#Password').val().trim(); 
+     }else{
+      alert('please repeat');
+     }
+     $('#Password').val('');
+     $('#con-Password').val('');
+    if (Username === "" || Password === "" || Email ==='')
+    {
+      alert('please fill the whole form');
+    }else
+    {
+      window.location.hash="#header";
+      ref.push({
+      Username:Username,
+      Email:Email,
+      Password:Password});
+   }
+} 
+  } 
+  });
+</script>
+</html>
