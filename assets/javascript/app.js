@@ -15,6 +15,7 @@ $(document).ready(function () {
 
     // Google vision API upload and pass photo to the API
     $("#pic").change(function encodeImagetoBase64(element) {
+        $("#loadPicIcon").attr("class", "fa fa-refresh fa-spin fa-3x fa-fw");
 
         var file = this.files[0];
         var reader = new FileReader();
@@ -70,7 +71,8 @@ $(document).ready(function () {
                         mood = 'sad';
                     }
 
-                    setTimeout(googleVoice(x), 1000);
+                    setTimeout(googleVoice(mood), 1000);
+                    $("#loadPicIcon").attr("class", "fa fa-cloud-upload fa-5x");
 
                 },
                 error: function (error) {
@@ -106,23 +108,28 @@ $(document).ready(function () {
                 speechRecognizer.lang = 'en-US';
                 speechRecognizer.maxAlternatives = 1;
 
-                $("#mic").on('click', function () {
-                    console.log($(this));
 
-                    $("#mic").css("animation", "mic-animate 2s linear infinite");
-                    // event.preventDefault();
+                setTimeout(function () {
+                    f()
+                }, 3000);
+
+
+                $("#mic").on('click', function () {
                     f();
                 });
 
                 function f() {
+                    $("#mic").css("animation", "mic-animate 2s linear infinite");
                     speechRecognizer.start();
                     speechRecognizer.onresult = function (event) {
                         for (var i = event.resultIndex; i < event.results.length; ++i) {
                             interimResults = event.results[i][0].transcript;
                             x = $('textarea').val();
                             console.log(event.results[i][0].transcript);
+
                             if (event.results[i].isFinal) {
                                 console.log(event.results[i].transcript);
+
                                 if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
                                     speechRecognizer.stop();
                                     speechSynthesis.speak(new SpeechSynthesisUtterance('go and  cook  some  food  for  your  self'));
@@ -153,6 +160,7 @@ $(document).ready(function () {
                                     break;
                                 }
                                 if (compare2string(event.results[i][0].transcript, "I want to eat something")) {
+                                    speechRecognizer.stop();
                                     foodMap('pizza');
                                     break;
                                 }
@@ -175,7 +183,18 @@ $(document).ready(function () {
         });
     }
 
+    $.getJSON("https://ipapi.co/json/",
+        function (json) {
+            // console.log(json);
+            var city = json.city;
+
+            $("iframe").attr("src", "https://www.google.com/maps/embed/v1/search?key=AIzaSyD0X2UTW5AczWoZ9-Wj517k9yvMZqBEeA4&q=" + city);
+        });
+
     function foodMap(search) {
+
+        $("#mic").css("animation", 'none');
+        $('textarea').val("");
 
         // Scroll to voice section once results are produced for the image
         $('html, body').stop().animate({

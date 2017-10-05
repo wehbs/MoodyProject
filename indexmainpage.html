@@ -85,7 +85,7 @@
       <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
         <div class="form-group">
           <h2>Upload a photo</h2>
-          <label for="pic"><i class="fa fa-cloud-upload fa-5x" aria-hidden="true"></i></label>
+          <label for="pic"><i class="fa fa-cloud-upload fa-5x" aria-hidden="true" id="loadPicIcon"></i></label>
           <input type="file" id="pic" style="display: none">
           <p class="help-block">Once you upload I can figure out your mood</p>
         </div>
@@ -104,6 +104,7 @@
           <br>
           <div id="button">
             <i id="mic" class="fa fa-microphone fa-lg" style="font-size: 8.333333em" aria-hidden="true"></i>
+            <h2>Click the mic to start listening</h2>
           </div>
         </div>
       </div>
@@ -115,11 +116,7 @@
       <div class="col-lg-8 col-lg-offset-2">
         <h2>Food to match the mood</h2>
         <div id="map">
-            <iframe
-            width="950"
-            height="350"
-            frameborder="0" style="border:0"
-            src="" allowfullscreen>
+          <iframe width="950" height="350" frameborder="0" style="border:0" src="" allowfullscreen>
           </iframe>
         </div>
       </div>

@@ -215,7 +215,7 @@
                     -moz-animation-timing-function: linear;
                 }
 
-                .fa-cloud-upload {
+                #loadPicIcon {
                     margin: 15px;
                     padding: 10px;
                     border-radius: 100% !important;
@@ -224,21 +224,21 @@
                     transition: background 0.3s ease-in-out;
                 }
 
-                .fa-cloud-upload:hover,
-                .fa-cloud-upload:focus {
+                #loadPicIcon:hover,
+                #loadPicIcon:focus {
                     outline: none;
                     color: white;
                     background: rgba(255, 255, 255, 0.1);
                 }
 
-                .fa-cloud-upload i.animated {
+                #loadPicIcon i.animated {
                     -webkit-transition-property: -webkit-transform;
                     -webkit-transition-duration: 1s;
                     -moz-transition-property: -moz-transform;
                     -moz-transition-duration: 1s;
                 }
 
-                .fa-cloud-upload:hover i.animated {
+                #loadPicIcon:hover i.animated {
                     -webkit-animation-name: pulse;
                     -moz-animation-name: pulse;
                     -webkit-animation-duration: 1.5s;
