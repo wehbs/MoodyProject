@@ -115,17 +115,20 @@ $(document).ready(function () {
             }, 3000);
 
 
-            $("#mic").on('click', function () {
-                f(mood);
-            });
             // console.log(x);
 
             function f(mood) {
                 // console.log(x);
-
+                speechRecognizer.onend = function (event) {
+                    $("#button").append("<h2>Click the mic to start listening</h2>");
+                    $("#mic").on('click', function () {
+                        f(mood);
+                    });
+                };
                 $("#mic").css("animation", "mic-animate 2s linear infinite");
                 speechRecognizer.start();
                 speechRecognizer.onresult = function (event) {
+                    $("#button").find('h2').empty();
                     for (var i = event.resultIndex; i < event.results.length; ++i) {
                         interimResults = event.results[i][0].transcript;
                         x = $('textarea').val();
