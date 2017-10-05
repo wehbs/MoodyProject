@@ -91,96 +91,96 @@ $(document).ready(function () {
 
 
     function googleVoice(x) {
+        console.log(x);
+        var speechMessage = new SpeechSynthesisUtterance();
+        speechMessage.lang = 'en-US';
+        speechMessage.text = 'oh  you  look  ' + x + ' Today  how  can I  help  you';
+        speechSynthesis.speak(speechMessage);
 
-        $(document).ready(function () {
-            var speechMessage = new SpeechSynthesisUtterance();
-            speechMessage.lang = 'en-US';
-            speechMessage.text = 'oh  you  look  ' + x + ' Today  how  can I  help  you';
-            speechSynthesis.speak(speechMessage);
-
-            speechMessage.onstart = function (event) {
-                console.log(event);
-            };
-            if ('webkitSpeechRecognition' in window) {
-                var speechRecognizer = new window.webkitSpeechRecognition();
-                speechRecognizer.continuous = true;
-                speechRecognizer.interimResults = true;
-                speechRecognizer.lang = 'en-US';
-                speechRecognizer.maxAlternatives = 1;
-
-
-                setTimeout(function () {
-                    f()
-                }, 3000);
+        speechMessage.onstart = function (event) {
+            console.log(event);
+        };
+        if ('webkitSpeechRecognition' in window) {
+            var speechRecognizer = new window.webkitSpeechRecognition();
+            speechRecognizer.continuous = true;
+            speechRecognizer.interimResults = true;
+            speechRecognizer.lang = 'en-US';
+            speechRecognizer.maxAlternatives = 1;
 
 
-                $("#mic").on('click', function () {
-                    f();
-                });
+            setTimeout(function () {
+                f()
+            }, 3000);
 
-                function f() {
-                    $("#mic").css("animation", "mic-animate 2s linear infinite");
-                    speechRecognizer.start();
-                    speechRecognizer.onresult = function (event) {
-                        for (var i = event.resultIndex; i < event.results.length; ++i) {
-                            interimResults = event.results[i][0].transcript;
-                            x = $('textarea').val();
-                            console.log(event.results[i][0].transcript);
 
-                            if (event.results[i].isFinal) {
-                                console.log(event.results[i].transcript);
+            $("#mic").on('click', function () {
+                f();
+            });
 
-                                if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
-                                    speechRecognizer.stop();
-                                    speechSynthesis.speak(new SpeechSynthesisUtterance('go and  cook  some  food  for  your  self'));
-                                }
-                                if (compare2string(event.results[i][0].transcript, "go")) {
-                                    window.open("https://www.google.com/search?source=hp&q=" + x);
-                                    $('textarea').val("");
-                                    break;
-                                }
-                                if (compare2string(event.results[i][0].transcript, "stop")) {
-                                    speechRecognizer.stop();
+            function f() {
+                $("#mic").css("animation", "mic-animate 2s linear infinite");
+                speechRecognizer.start();
+                speechRecognizer.onresult = function (event) {
+                    for (var i = event.resultIndex; i < event.results.length; ++i) {
+                        interimResults = event.results[i][0].transcript;
+                        x = $('textarea').val();
+                        console.log(event.results[i][0].transcript);
 
-                                    $("#mic").css("animation", 'none');
-                                    break;
-                                }
-                                if (compare2string(event.results[i][0].transcript, "delete")) {
-                                    var lastIndex = x.lastIndexOf(" ");
-                                    x = x.substring(0, lastIndex);
-                                    $('textarea').val(x);
-                                    break;
-                                }
-                                if (compare2string(event.results[i][0].transcript, "delete all")) {
-                                    $('textarea').val("");
-                                    break;
-                                }
-                                if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
-                                    foodMap('theatre');
-                                    break;
-                                }
-                                if (compare2string(event.results[i][0].transcript, "I want to eat something")) {
-                                    speechRecognizer.stop();
-                                    foodMap('pizza');
-                                    break;
-                                }
+                        if (event.results[i].isFinal) {
 
-                                $('textarea').val(x + " " + interimResults);
-                                console.log("final results: " + event.results[i][0].transcript);
+                            if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("go and  cook  some  food  for  your  self"));
                             }
+                            if (compare2string(event.results[i][0].transcript, "go")) {
+                                window.open("https://www.google.com/search?source=hp&q=" + x);
+                                $('textarea').val("");
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "stop")) {
+                                speechRecognizer.stop();
+                                $('textarea').val("");
+                                $("#mic").css("animation", 'none');
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "delete")) {
+                                var lastIndex = x.lastIndexOf(" ");
+                                x = x.substring(0, lastIndex);
+                                $('textarea').val(x);
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "delete all")) {
+                                $('textarea').val("");
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well I don't know any movies that will match your mood but here are your local theatre's"));
+                                foodMap("theatre");
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "I want to eat something")) {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will comfort you"));
+                                foodMap("ice cream");
+                                break;
+                            }
+
+                            $('textarea').val(x + " " + interimResults);
+                            console.log("final results: " + event.results[i][0].transcript);
                         }
                     }
                 }
             }
+        }
 
-            function compare2string(x, y) {
-                if (x.toLowerCase().replace(/ /g, '').replace(/'/g, '') === y.toLowerCase().replace(/ /g, '').replace(/'/g, '')) {
-                    return true;
-                } else {
-                    return false;
-                }
+        function compare2string(x, y) {
+            if (x.toLowerCase().replace(/ /g, '').replace(/'/g, '') === y.toLowerCase().replace(/ /g, '').replace(/'/g, '')) {
+                return true;
+            } else {
+                return false;
             }
-        });
+        }
     }
 
     $.getJSON("https://ipapi.co/json/",
