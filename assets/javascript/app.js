@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
-
+    // read a this greeting message for the user depense on his name
+    var user = sessionStorage.getItem('user');
+    speechSynthesis.speak(new SpeechSynthesisUtterance("Hi,  " + user + '. upload your photo and check your mood today'));
 
     // jQuery for page scrolling feature - requires jQuery Easing plugin
     $(function () {
@@ -114,13 +116,13 @@ $(document).ready(function () {
 
 
             $("#mic").on('click', function () {
-                f();            
+                f(mood);
             });
             // console.log(x);
-            
+
             function f(mood) {
                 // console.log(x);
-                
+
                 $("#mic").css("animation", "mic-animate 2s linear infinite");
                 speechRecognizer.start();
                 speechRecognizer.onresult = function (event) {
@@ -128,7 +130,7 @@ $(document).ready(function () {
                         interimResults = event.results[i][0].transcript;
                         x = $('textarea').val();
                         console.log(event.results[i][0].transcript);
-   
+
                         if (event.results[i].isFinal) {
 
                             if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
@@ -156,8 +158,18 @@ $(document).ready(function () {
                                 $('textarea').val("");
                                 break;
                             }
-
-
+                            if (compare2string(event.results[i][0].transcript, "I want to get out of the house") && mood == "sad") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Since your feeling blue you should treat yourself to some relaxation. A spa day perhaps and long massage"));
+                                foodMap("spa");
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "I want to get out of the house") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why dont you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
+                                foodMap("parks");
+                                break;
+                            }
                             if (compare2string(event.results[i][0].transcript, "I want to watch a movie") && mood == "sad") {
                                 speechRecognizer.stop();
                                 speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
@@ -170,17 +182,15 @@ $(document).ready(function () {
                                 foodMap("theatre");
                                 break;
                             }
-
-
                             if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "sad") {
                                 speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will comfort you"));
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite."));
                                 foodMap("ice cream");
                                 break;
                             }
                             if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "happy") {
                                 speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will keep you happy and healthy"));
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
                                 foodMap("healthy food");
                                 break;
                             }

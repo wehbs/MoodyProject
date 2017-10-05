@@ -128,7 +128,7 @@
 
             if ((v.Username === user) && (v.Password === Password)) {
               authenSucces = true;
-
+              sessionStorage.setItem('user', v.Username);
             }
           });
           if (authenSucces === true) {
