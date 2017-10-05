@@ -139,7 +139,9 @@ $(document).ready(function () {
                             }
                             if (compare2string(event.results[i][0].transcript, "go")) {
                                 window.open("https://www.google.com/search?source=hp&q=" + x);
+                                speechRecognizer.stop();     
                                 $('textarea').val("");
+                                $("#mic").css("animation", 'none');                                                                
                                 break;
                             }
                             if (compare2string(event.results[i][0].transcript, "stop")) {
@@ -166,7 +168,7 @@ $(document).ready(function () {
                             }
                             if (compare2string(event.results[i][0].transcript, "I want to get out of the house") && mood == "happy") {
                                 speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why dont you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why don't you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
                                 foodMap("parks");
                                 break;
                             }
@@ -184,7 +186,7 @@ $(document).ready(function () {
                             }
                             if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "sad") {
                                 speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite."));
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite"));
                                 foodMap("ice cream");
                                 break;
                             }
