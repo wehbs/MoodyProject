@@ -90,11 +90,11 @@ $(document).ready(function () {
 
 
 
-    function googleVoice(x) {
-        console.log(x);
+    function googleVoice(mood) {
+
         var speechMessage = new SpeechSynthesisUtterance();
         speechMessage.lang = 'en-US';
-        speechMessage.text = 'oh  you  look  ' + x + ' Today  how  can I  help  you';
+        speechMessage.text = 'oh  you  look  ' + mood + ' Today  how  can I  help  you';
         speechSynthesis.speak(speechMessage);
 
         speechMessage.onstart = function (event) {
@@ -109,15 +109,18 @@ $(document).ready(function () {
 
 
             setTimeout(function () {
-                f()
+                f(mood)
             }, 3000);
 
 
             $("#mic").on('click', function () {
-                f();
+                f();            
             });
-
-            function f() {
+            // console.log(x);
+            
+            function f(mood) {
+                // console.log(x);
+                
                 $("#mic").css("animation", "mic-animate 2s linear infinite");
                 speechRecognizer.start();
                 speechRecognizer.onresult = function (event) {
@@ -125,7 +128,7 @@ $(document).ready(function () {
                         interimResults = event.results[i][0].transcript;
                         x = $('textarea').val();
                         console.log(event.results[i][0].transcript);
-
+   
                         if (event.results[i].isFinal) {
 
                             if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
@@ -159,10 +162,16 @@ $(document).ready(function () {
                                 foodMap("theatre");
                                 break;
                             }
-                            if (compare2string(event.results[i][0].transcript, "I want to eat something")) {
+                            if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "sad") {
                                 speechRecognizer.stop();
                                 speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will comfort you"));
                                 foodMap("ice cream");
+                                break;
+                            }
+                            if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will keep you happy and healthy"));
+                                foodMap("healthy food");
                                 break;
                             }
 
