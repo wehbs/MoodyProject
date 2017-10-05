@@ -16,8 +16,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
   <!-- Link to external javaScript -->
-  <script src="assets/javascript/app.js" type="text/javascript"></script>
-  <link rel=stylesheet href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css">
+  <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+
   <!-- Added link to the Bootstrap Library -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
@@ -35,7 +35,7 @@
 
 </head>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<body id="page-top" style="overflow:hidden" data-target=".navbar-fixed-top">
 
 
   <!-- Navigation -->
@@ -49,73 +49,149 @@
     </div>
   </nav>
 
-  <!-- Intro Header -->
-  <header class="intro">
+  <!-- Login-->
+  <header class="intro" id="header">
     <div class="intro-body">
       <div class="container">
         <div class="row">
-          <div class="col-md-8 col-md-offset-2">
-            <h1 style="font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;" class="brand-heading">
-             <span style="color: #0074D9">M</span>
-             <span style="color:#01FF70">O</span>
-             <span style="color:#FF851B">O</span>
-             <span style="color:#FFDC00">D</span>
-             <span style="color:#7FDBFF">Y</span></h1>
-            <p class="intro-text">
-              Show me your mood and I'll show you some food
-            </p>
-            <a href="#upload" class="btn btn-circle page-scroll">
-              <i class="fa fa-angle-down animated"></i>
-            </a>
+          <div class="col-md-4 col-md-offset-4">
+            <div class="form-group">
+              <label for="usr" style="font-size:15px">Username</label>
+              <input type="text" class="form-control" id="username">
+            </div>
+            <div class="form-group">
+              <label for="pwd" style="font-size:15px">Password</label>
+              <input type="password" class="form-control" id="password">
+            </div>
+            <div style="display:grid">
+              <button type="button" id='Connect' class="btn btn-success">Connect</button>
+              <a href="#Subscribe" style="color: red;margin-top: 10px;font-size: 18px">
+             New Users must subscribe
+             </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Upload photo Section -->
-  <section id="upload" class="container content-section text-center">
+  <!-- Sign Up -->
+  <section id="Subscribe" class="container content-section text-center">
     <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+      <div class="col-md-4 col-md-offset-4">
         <div class="form-group">
-          <h2>Upload a photo</h2>
-          <label for="pic"><i class="fa fa-cloud-upload fa-5x" aria-hidden="true"></i></label>
-          <input type="file" id="pic" style="display: none">
-          <p class="help-block">Once you upload I can figure out your mood</p>
+          <label for="usr" style="font-size:15px">Username</label>
+          <input type="text" class="form-control" id="Username">
         </div>
+        <div class="form-group">
+          <label for="Email" style="font-size:15px">Email</label>
+          <input type="text" class="form-control" id="Email">
+        </div>
+        <div class="form-group">
+          <label for="pwd" style="font-size:15px">Password</label>
+          <input type="password" class="form-control" id="Password">
+        </div>
+        <div class="form-group">
+          <label for="pwd" style="font-size:15px">Re-enter Password</label>
+          <input type="password" class="form-control" id="con-Password">
+        </div>
+        <button id="Submit" type="button" class="btn btn-success">Submit</button>
       </div>
     </div>
   </section>
-
-  <!-- Google voice -->
-  <section id="voice" class="container results-section text-center">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2">
-        <h2>Lets talk about it</h2>
-        <div id="A" class="form-group">
-            <label for="comment">Say Somethimg</label>
-            <textarea class="form-control" rows="1" id="comment"></textarea>
-            <br>
-             <div id="button">
-              <i id="mic" class="fa fa-microphone fa-lg" style="font-size: 8.333333em" aria-hidden="true"></i>
-            </div> 
-          </div>
-
-        
-
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container text-center">
-      <p>Hope you enjoyed</p>
-    </div>
-  </footer>
-
 </body>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBjtiq0vAqMLSYipkvVn7FAhMjz8w87o1w",
+    authDomain: "prefab-icon-181104.firebaseapp.com",
+    databaseURL: "https://prefab-icon-181104.firebaseio.com",
+    projectId: "prefab-icon-181104",
+    storageBucket: "prefab-icon-181104.appspot.com",
+    messagingSenderId: "418253791179"
+  };
 
+  $(document).ready(function () {
+    // initiate the database
+    firebase.initializeApp(config);
+    database = firebase.database();
+    //take a reference of the database
+    ref = database.ref();
+    $("#Connect").on('click', function () {
+      // verify the identity of the user based on the value of the database
+      var user = $('#username').val().trim();
+      $('#username').val('');
+      var Password = $('#password').val().trim();
+      $('#password').val('');
+      if (user === "" || Password === "") {
+        alert('Please enter Username and Password.');
+      } else {
+        var authenSucces = false;
+        ref.once('value', function (snapshot) {
+          $.each(snapshot.val(), function (k, v) {
+
+            if ((v.Username === user) && (v.Password === Password)) {
+              authenSucces = true;
+              // store the user name in tha local session memory to use it after
+              sessionStorage.setItem('user', v.Username);
+            }
+          });
+          if (authenSucces === true) {
+            // go to the principal page once the authentification was successed
+            window.location.href = 'indexmainpage.html';
+
+          }
+          if (authenSucces === false) {
+            alert('User not found');
+          }
+        });
+      }
+    });
+    $('#Submit').on('click', function () {
+      subscribe();
+    });
+    //this to allow new user to sibscribe
+    function subscribe() {
+      var Username = $('#Username').val().trim();
+      $('#Username').val('');
+      var Email = $('#Email').val().trim();
+      $('#Email').val('');
+      var Userexist = false;
+      // check if the username picked it not already taken
+      ref.on('value', function (snapshot) {
+        $.each(snapshot.val(), function (k, v) {
+          if (v.Username == Username) {
+            Userexist = true;
+          }
+        });
+      });
+      if (Userexist === true) {
+        // alert if the username is picked
+        alert("this Username has been used");
+      } else {
+        // confirmation of the password so that the user will be sure of his password
+        if ($('#Password').val() === $('#con-Password').val()) {
+          var Password = $('#Password').val().trim();
+        } else {
+          alert('please repeat');
+        }
+        // the user must fill all inputs to subscribe
+        $('#Password').val('');
+        $('#con-Password').val('');
+        if (Username === "" || Password === "" || Email === '') {
+          alert('please fill the whole form');
+        } else {
+          // if the user has followed all rules he will be added to the database
+          window.location.hash = "#header";
+          ref.push({
+            Username: Username,
+            Email: Email,
+            Password: Password
+          });
+        }
+      }
+    }
+  });
+</script>
 
 </html>
