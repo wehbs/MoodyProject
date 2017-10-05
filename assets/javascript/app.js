@@ -156,12 +156,22 @@ $(document).ready(function () {
                                 $('textarea').val("");
                                 break;
                             }
-                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie")) {
+
+
+                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie") && mood == "sad") {
                                 speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well I don't know any movies that will match your mood but here are your local theatre's"));
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
                                 foodMap("theatre");
                                 break;
                             }
+                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well your feeling pretty good how about an action film or maybe a comedy, here are your local theatre's"));
+                                foodMap("theatre");
+                                break;
+                            }
+
+
                             if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "sad") {
                                 speechRecognizer.stop();
                                 speechSynthesis.speak(new SpeechSynthesisUtterance("Here's some food that will comfort you"));
@@ -174,6 +184,7 @@ $(document).ready(function () {
                                 foodMap("healthy food");
                                 break;
                             }
+
 
                             $('textarea').val(x + " " + interimResults);
                             console.log("final results: " + event.results[i][0].transcript);
