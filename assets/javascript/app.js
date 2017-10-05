@@ -139,9 +139,9 @@ $(document).ready(function () {
                             }
                             if (compare2string(event.results[i][0].transcript, "go")) {
                                 window.open("https://www.google.com/search?source=hp&q=" + x);
-                                speechRecognizer.stop();     
+                                speechRecognizer.stop();
                                 $('textarea').val("");
-                                $("#mic").css("animation", 'none');                                                                
+                                $("#mic").css("animation", 'none');
                                 break;
                             }
                             if (compare2string(event.results[i][0].transcript, "stop")) {
@@ -241,80 +241,6 @@ $(document).ready(function () {
                 $("iframe").attr("src", "https://www.google.com/maps/embed/v1/search?key=AIzaSyD0X2UTW5AczWoZ9-Wj517k9yvMZqBEeA4&q=" + search + "+in+" + city);
             });
     }
-
-    // var GW = new google.maps.LatLng(38.8824200, -77.116944);
-    // var map;
-    // var infowindow;
-    // var request;
-    // var service;
-    // var markers = [];
-
-    // function callback(results, status) {
-    //     if (status == google.maps.places.PlacesServiceStatus.OK) {
-    //         for (var i = 0; i < results.length; i++) {
-    //             var place = results[i];
-    //             createMarker(results[i]);
-    //         }
-    //     }
-    // }
-
-    // function createMarker(place) {
-    //     var placeLoc = place.geometry.location;
-    //     marker = new google.maps.Marker({
-    //         map: map,
-    //         position: place.geometry.location
-
-    //     });
-    //     google.maps.event.addListener(marker, 'click', function () {
-    //         var infowindow = new google.maps.InfoWindow({
-    //             content: place.name
-    //         });
-    //         infowindow.open(map, this);
-    //     });
-    //     return marker;
-    // }
-
-    // function clearResults(markers) {
-    //     for (var m in markers) {
-    //         markers[m].setmap(null)
-    //     }
-    //     markers = []
-    // }
-
-    // function foodMap(search) {
-
-    //     // Scroll to voice section once results are produced for the image
-    //     $('html, body').stop().animate({
-    //         scrollTop: $("#mapSection").offset().top
-    //     }, 1500, 'easeInOutExpo');
-
-    //     var request = {
-    //         location: GW,
-    //         radius: '500',
-    //         type: [search]
-    //     };
-
-    //     service = new google.maps.places.PlacesService(map);
-    //     service.nearbySearch(request, callback);
-
-    // }
-
-    // function initialize() {
-
-    //     map = new google.maps.Map(document.getElementById('map'), {
-    //         center: GW,
-    //         zoom: 16
-    //     });
-    //     request = {
-    //         location: GW,
-    //         radius: '500'
-    //     };
-
-    //     service = new google.maps.places.PlacesService(map);
-
-    // }
-
-    // google.maps.event.addDomListener(window, 'load', initialize);
 
 
 
