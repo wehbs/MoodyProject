@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
     // read a this greeting message for the user depense on his name
-    var user = sessionStorage.getItem('user');
-    speechSynthesis.speak(new SpeechSynthesisUtterance("Hi,  " + user + '. upload your photo and check your mood today'));
+    // var user = sessionStorage.getItem('user');
+    // speechSynthesis.speak(new SpeechSynthesisUtterance("Hi,  " + user + '. upload your photo and check your mood today'));
 
     // jQuery for page scrolling feature - requires jQuery Easing plugin
     $(function () {
@@ -58,14 +58,13 @@ $(document).ready(function () {
                     var sorrow = faceResults.sorrowLikelihood;
                     var surprise = faceResults.surpriseLikelihood;
 
-                    // console.log(faceResults);
-
                     console.log("Anger " + anger);
                     console.log("Joy " + joy);
                     console.log("Sorrow " + sorrow);
                     console.log("Surprise " + surprise);
 
                     var mood;
+
                     if (joy === "LIKELY" || joy === "POSSIBLE" || joy === "VERY_LIKELY") {
                         mood = 'happy';
                     }
@@ -82,15 +81,10 @@ $(document).ready(function () {
                 }
             });
 
-            //   console.log(convertedPic);
-            // console.log(convertedPicSlice);
         }
         reader.readAsDataURL(file);
 
-
     });
-
-
 
     function googleVoice(mood) {
 
@@ -102,6 +96,7 @@ $(document).ready(function () {
         speechMessage.onstart = function (event) {
             console.log(event);
         };
+
         if ('webkitSpeechRecognition' in window) {
             var speechRecognizer = new window.webkitSpeechRecognition();
             speechRecognizer.continuous = true;
@@ -115,94 +110,79 @@ $(document).ready(function () {
             }, 3000);
 
 
-            // console.log(x);
-
             function f(mood) {
-                // console.log(x);
+
                 speechRecognizer.onend = function (event) {
                     $("#button").append("<h2>Click the mic to start listening</h2>");
                     $("#mic").on('click', function () {
                         f(mood);
                     });
                 };
+
                 $("#mic").css("animation", "mic-animate 2s linear infinite");
+
                 speechRecognizer.start();
+
                 speechRecognizer.onresult = function (event) {
                     $("#button").find('h2').empty();
                     for (var i = event.resultIndex; i < event.results.length; ++i) {
                         interimResults = event.results[i][0].transcript;
+                        $('textarea').val(interimResults);
                         x = $('textarea').val();
-                        console.log(event.results[i][0].transcript);
+                        console.log(x);
 
-                        if (event.results[i].isFinal) {
-
-                            if (compare2string(event.results[i][0].transcript, "Im looking for some food")) {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("go and  cook  some  food  for  your  self"));
-                            }
-                            if (compare2string(event.results[i][0].transcript, "go")) {
-                                window.open("https://www.google.com/search?source=hp&q=" + x);
-                                speechRecognizer.stop();
-                                $('textarea').val("");
-                                $("#mic").css("animation", 'none');
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "stop")) {
-                                speechRecognizer.stop();
-                                $('textarea').val("");
-                                $("#mic").css("animation", 'none');
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "delete")) {
-                                var lastIndex = x.lastIndexOf(" ");
-                                x = x.substring(0, lastIndex);
-                                $('textarea').val(x);
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "delete all")) {
-                                $('textarea').val("");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to get out of the house") && mood == "sad") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Since your feeling blue you should treat yourself to some relaxation. A spa day perhaps and long massage"));
-                                foodMap("spa");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to get out of the house") && mood == "happy") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why don't you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
-                                foodMap("parks");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie") && mood == "sad") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
-                                foodMap("theatre");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to watch a movie") && mood == "happy") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well your feeling pretty good how about an action film or maybe a comedy, here are your local theatre's"));
-                                foodMap("theatre");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "sad") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite"));
-                                foodMap("ice cream");
-                                break;
-                            }
-                            if (compare2string(event.results[i][0].transcript, "I want to eat something") && mood == "happy") {
-                                speechRecognizer.stop();
-                                speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
-                                foodMap("healthy food");
-                                break;
-                            }
-
-
-                            $('textarea').val(x + " " + interimResults);
-                            console.log("final results: " + event.results[i][0].transcript);
+                        if (compare2string(x, "Im looking for some food")) {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("go and  cook  some  food  for  your  self"));
+                        } else if (compare2string(x, "go")) {
+                            window.open("https://www.google.com/search?source=hp&q=" + x);
+                            speechRecognizer.stop();
+                            $('textarea').val("");
+                            $("#mic").css("animation", 'none');
+                            break;
+                        } else if (compare2string(x, "stop")) {
+                            speechRecognizer.stop();
+                            $('textarea').val("");
+                            $("#mic").css("animation", 'none');
+                            break;
+                        } else if (compare2string(x, "delete")) {
+                            var lastIndex = x.lastIndexOf(" ");
+                            x = x.substring(0, lastIndex);
+                            $('textarea').val(x);
+                            break;
+                        } else if (compare2string(x, "delete all")) {
+                            $('textarea').val("");
+                            break;
+                        } else if (compare2string(x, "I want to get out of the house") && mood == "sad") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("Since your feeling blue you should treat yourself to some relaxation. A spa day perhaps and long massage"));
+                            foodMap("spa");
+                            break;
+                        } else if (compare2string(x, "I want to get out of the house") && mood == "happy") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why don't you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
+                            foodMap("parks");
+                            break;
+                        } else if (compare2string(x, "I want to watch a movie") && mood == "sad") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
+                            foodMap("theatre");
+                            break;
+                        } else if (compare2string(x, "I want to watch a movie") && mood == "happy") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("Well your feeling pretty good how about an action film or maybe a comedy, here are your local theatre's"));
+                            foodMap("theatre");
+                            break;
+                        } else if (compare2string(x, "I want to eat something") && mood == "sad") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite"));
+                            foodMap("ice cream");
+                            break;
+                        } else if (compare2string(x, "I want to eat something") && mood == "happy") {
+                            speechRecognizer.stop();
+                            speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
+                            foodMap("healthy food");
+                            break;
                         }
                     }
                 }
@@ -220,7 +200,7 @@ $(document).ready(function () {
 
     $.getJSON("https://ipapi.co/json/",
         function (json) {
-            // console.log(json);
+
             var city = json.city;
 
             $("iframe").attr("src", "https://www.google.com/maps/embed/v1/search?key=AIzaSyD0X2UTW5AczWoZ9-Wj517k9yvMZqBEeA4&q=" + city);
@@ -231,14 +211,14 @@ $(document).ready(function () {
         $("#mic").css("animation", 'none');
         $('textarea').val("");
 
-        // Scroll to voice section once results are produced for the image
+        // Scroll to map section once results are produced for the image
         $('html, body').stop().animate({
             scrollTop: $("#mapSection").offset().top
         }, 1500, 'easeInOutExpo');
 
         $.getJSON("https://ipapi.co/json/",
             function (json) {
-                // console.log(json);
+
                 var city = json.city;
 
                 $("iframe").attr("src", "https://www.google.com/maps/embed/v1/search?key=AIzaSyD0X2UTW5AczWoZ9-Wj517k9yvMZqBEeA4&q=" + search + "+in+" + city);
