@@ -124,65 +124,78 @@ $(document).ready(function () {
                 speechRecognizer.start();
 
                 speechRecognizer.onresult = function (event) {
+
                     $("#button").find('h2').empty();
+
                     for (var i = event.resultIndex; i < event.results.length; ++i) {
+
                         interimResults = event.results[i][0].transcript;
                         $('textarea').val(interimResults);
                         x = $('textarea').val();
                         console.log(x);
 
-                        if (compare2string(x, "Im looking for some food")) {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("go and  cook  some  food  for  your  self"));
-                        } else if (compare2string(x, "go")) {
-                            window.open("https://www.google.com/search?source=hp&q=" + x);
-                            speechRecognizer.stop();
-                            $('textarea').val("");
-                            $("#mic").css("animation", 'none');
-                            break;
-                        } else if (compare2string(x, "stop")) {
-                            speechRecognizer.stop();
-                            $('textarea').val("");
-                            $("#mic").css("animation", 'none');
-                            break;
-                        } else if (compare2string(x, "delete")) {
-                            var lastIndex = x.lastIndexOf(" ");
-                            x = x.substring(0, lastIndex);
-                            $('textarea').val(x);
-                            break;
-                        } else if (compare2string(x, "delete all")) {
-                            $('textarea').val("");
-                            break;
-                        } else if (compare2string(x, "I want to get out of the house") && mood == "sad") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("Since your feeling blue you should treat yourself to some relaxation. A spa day perhaps and long massage"));
-                            foodMap("spa");
-                            break;
-                        } else if (compare2string(x, "I want to get out of the house") && mood == "happy") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why don't you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
-                            foodMap("parks");
-                            break;
-                        } else if (compare2string(x, "I want to watch a movie") && mood == "sad") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
-                            foodMap("theatre");
-                            break;
-                        } else if (compare2string(x, "I want to watch a movie") && mood == "happy") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("Well your feeling pretty good how about an action film or maybe a comedy, here are your local theatre's"));
-                            foodMap("theatre");
-                            break;
-                        } else if (compare2string(x, "I want to eat something") && mood == "sad") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite"));
-                            foodMap("ice cream");
-                            break;
-                        } else if (compare2string(x, "I want to eat something") && mood == "happy") {
-                            speechRecognizer.stop();
-                            speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
-                            foodMap("healthy food");
-                            break;
+                        if (event.results[i].isFinal) {
+                            if (compare2string(x, "Im looking for some food")) {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("go and  cook  some  food  for  your  self"));
+                            } else if (compare2string(x, "go")) {
+                                window.open("https://www.google.com/search?source=hp&q=" + x);
+                                speechRecognizer.stop();
+                                $('textarea').val("");
+                                $("#mic").css("animation", 'none');
+                                break;
+                            } else if (compare2string(x, "stop")) {
+                                speechRecognizer.stop();
+                                $('textarea').val("");
+                                $("#mic").css("animation", 'none');
+                                break;
+                            } else if (compare2string(x, "delete")) {
+                                var lastIndex = x.lastIndexOf(" ");
+                                x = x.substring(0, lastIndex);
+                                $('textarea').val(x);
+                                break;
+                            } else if (compare2string(x, "delete all")) {
+                                $('textarea').val("");
+                                break;
+                            } else if (compare2string(x, "I want to get out of the house") && mood == "sad") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Since your feeling blue you should treat yourself to some relaxation. A spa day perhaps and long massage"));
+                                foodMap("spa");
+                                break;
+                            } else if (compare2string(x, "I want to get out of the house") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well since your having such a good day why don't you go ahead and add to it by visiting one of your local parks, go and be one with nature"));
+                                foodMap("parks");
+                                break;
+                            } else if (compare2string(x, "I want to watch a movie") && mood == "sad") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("How about an animated film, or maybe even a musical that will get your spirits up, here are your local theatre's"));
+                                foodMap("theatre");
+                                break;
+                            } else if (compare2string(x, "I want to watch a movie") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Well your feeling pretty good how about an action film or maybe a comedy, here are your local theatre's"));
+                                foodMap("theatre");
+                                break;
+                            } else if (compare2string(x, "I want to eat something") && mood == "sad") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry your feeling sad, here's some food that will comfort you. It's mostly ice cream, my favorite"));
+                                foodMap("ice cream");
+                                break;
+                            } else if (compare2string(x, "I want to eat something") && mood == "happy") {
+                                speechRecognizer.stop();
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
+                                foodMap("healthy food");
+                                break;
+                            }   else {
+                                speechRecognizer.stop();
+                                $("#mic").css("animation", 'none');        
+                                $('textarea').val("");                                
+                                speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry, I'm not programmed for that yet. Try one of the printed examples"));
+                                setTimeout(function () {
+                                    f(mood)
+                                }, 5000);
+                            }
                         }
                     }
                 }
