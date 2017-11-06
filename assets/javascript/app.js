@@ -75,6 +75,7 @@ $(document).ready(function () {
                     // Will use these in future updates
                     // var anger = faceResults.angerLikelihood;
                     // var surprise = faceResults.surpriseLikelihood;
+
                     console.log("Joy " + joy);
                     console.log("Sorrow " + sorrow);
 
@@ -141,6 +142,7 @@ $(document).ready(function () {
 
             function f(mood) {
 
+                // When the speechRecognizer stops execute this function
                 speechRecognizer.onend = function (event) {
                     // Show the user instructions on how to start the mic again after it stops listening to make another statement
                     $("#button").append("<h2>Click the mic to start listening</h2>");
@@ -157,15 +159,18 @@ $(document).ready(function () {
 
                 speechRecognizer.onresult = function (event) {
 
+                    // When the mic receives input remove the "click the mic to start listening text"
                     $("#button").find('h2').empty();
 
                     for (var i = event.resultIndex; i < event.results.length; ++i) {
 
                         interimResults = event.results[i][0].transcript;
+                        // Display words as their being said in the textbox
                         $('textarea').val(interimResults);
                         x = $('textarea').val();
                         console.log(x);
 
+                        // Once the user statement is considered final run it through the following if else statements
                         if (event.results[i].isFinal) {
                             if (compare2string(x, "Im looking for some food")) {
                                 speechRecognizer.stop();
