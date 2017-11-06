@@ -1,5 +1,4 @@
 # MoodyProject
-Project 1 GW Coding Boot Camp
 
 **CURRENTLY ONLY WORKS IN CHROME**
 
