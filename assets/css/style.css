@@ -370,7 +370,7 @@
                     #mic {
                         padding: 20px;
                         font-size: 8.333333em;
-                        background-image: url(water.png);
+                        background-image: url(../images/water.png);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                     }

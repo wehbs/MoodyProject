@@ -1,8 +1,12 @@
 $(document).ready(function () {
 
+    // This will be used in a future release to greet the user by name when they log into the app. This approach would look at the username which would have been saved to the users local sessionStorage in the browser
+
     // read a this greeting message for the user depense on his name
     // var user = sessionStorage.getItem('user');
     // speechSynthesis.speak(new SpeechSynthesisUtterance("Hi,  " + user + '. upload your photo and check your mood today'));
+
+
 
     // jQuery for page scrolling feature - requires jQuery Easing plugin
     $(function () {
@@ -15,19 +19,31 @@ $(document).ready(function () {
         });
     });
 
-    // Google vision API upload and pass photo to the API
-    $("#pic").change(function encodeImagetoBase64(element) {
+
+
+    // ====================================================================================================================================
+    // UPLOAD AND PASS A PHOTO TO THE GOOGLE VISION API    
+    // ====================================================================================================================================
+
+    // When the state of the input element changes execute this function
+    $("#pic").change(function () {
         $("#loadPicIcon").attr("class", "fa fa-refresh fa-spin fa-3x fa-fw");
 
+        // Store the uploaded file
         var file = this.files[0];
+
+        // New FileReader object to read the uploaded file
         var reader = new FileReader();
 
+        // This event is triggered each time the reading operation is completed
         reader.onloadend = function () {
             var convertedPic = reader.result;
-            // Removes the extra string characters before the /
+            // Finds where the "," starts and then adds one and only gets the Base64 part of the string
             var sliceNum = convertedPic.indexOf(",") + 1;
+            // Removes the extra string characters before the / by slicing out the Data Url content based on the indexOf resulting in final format of image in Base64 that the google vision api understands
             var convertedPicSlice = convertedPic.slice(sliceNum);
 
+            // Post the uploaded file to the google vision api and only ask to use Face Detection feature
             $.ajax({
                 url: "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDdccmbhWxyGXxtqWe1mrNpBPbL7ZN3GRY",
                 type: 'POST',
@@ -43,28 +59,33 @@ $(document).ready(function () {
                         }]
                     }]
                 }),
-
+                // If detection is a success execute this function
                 success: function (result) {
-                    // CallBack(result);
 
                     // Scroll to voice section once results are produced for the image
                     $('html, body').stop().animate({
                         scrollTop: $("#voice").offset().top
                     }, 1500, 'easeInOutExpo');
 
+                    // Store the results from the api for the face detection
                     var faceResults = result.responses[0].faceAnnotations[0];
-                    var anger = faceResults.angerLikelihood;
                     var joy = faceResults.joyLikelihood;
                     var sorrow = faceResults.sorrowLikelihood;
-                    var surprise = faceResults.surpriseLikelihood;
 
-                    console.log("Anger " + anger);
+                    // Will use these in future updates
+                    // var anger = faceResults.angerLikelihood;
+                    // var surprise = faceResults.surpriseLikelihood;
                     console.log("Joy " + joy);
                     console.log("Sorrow " + sorrow);
-                    console.log("Surprise " + surprise);
 
+                    // Will use these in future updates
+                    // console.log("Anger " + anger);
+                    // console.log("Surprise " + surprise);
+
+                    // Store the mood based on results of google vision api
                     var mood;
 
+                    // The google vision api uses likely, possible and very likely to represent the specific mood as true. If so then happy or sad is assigned to the mood variable
                     if (joy === "LIKELY" || joy === "POSSIBLE" || joy === "VERY_LIKELY") {
                         mood = 'happy';
                     }
@@ -72,7 +93,9 @@ $(document).ready(function () {
                         mood = 'sad';
                     }
 
+                    // Execute the voice function after 1 second and pass through the current mood
                     setTimeout(googleVoice(mood), 1000);
+                    // Change the dynamic loading icon back to the static cloud icon
                     $("#loadPicIcon").attr("class", "fa fa-cloud-upload fa-5x");
 
                 },
@@ -82,9 +105,15 @@ $(document).ready(function () {
             });
 
         }
+        // Starts reading the contents of the specified Blob, once finished, the result attribute contains a data: URL representing the file's data in Base64
         reader.readAsDataURL(file);
 
     });
+
+
+    // ====================================================================================================================================
+    // USE THE WEB SPEECH API TO INTERACT WITH THE USER AND RETURN RESULTS BASED ON USER VOICE INPUT
+    // ====================================================================================================================================
 
     function googleVoice(mood) {
 
@@ -104,7 +133,7 @@ $(document).ready(function () {
             speechRecognizer.lang = 'en-US';
             speechRecognizer.maxAlternatives = 1;
 
-
+            // Wait until computer voice is done talking before listening on the mic so it doesn't hear itself
             setTimeout(function () {
                 f(mood)
             }, 3000);
@@ -113,12 +142,15 @@ $(document).ready(function () {
             function f(mood) {
 
                 speechRecognizer.onend = function (event) {
+                    // Show the user instructions on how to start the mic again after it stops listening to make another statement
                     $("#button").append("<h2>Click the mic to start listening</h2>");
+                    // When the mic is clicked start the f function again
                     $("#mic").on('click', function () {
                         f(mood);
                     });
                 };
 
+                // Start mic animation when the mic starts to listen
                 $("#mic").css("animation", "mic-animate 2s linear infinite");
 
                 speechRecognizer.start();
@@ -187,10 +219,10 @@ $(document).ready(function () {
                                 speechSynthesis.speak(new SpeechSynthesisUtterance("Glad to see your feeling good, here's some food that will keep you happy and healthy"));
                                 foodMap("healthy food");
                                 break;
-                            }   else {
+                            } else {
                                 speechRecognizer.stop();
-                                $("#mic").css("animation", 'none');        
-                                $('textarea').val("");                                
+                                $("#mic").css("animation", 'none');
+                                $('textarea').val("");
                                 speechSynthesis.speak(new SpeechSynthesisUtterance("Sorry, I'm not programmed for that yet. Try one of the printed examples"));
                                 setTimeout(function () {
                                     f(mood)
@@ -202,6 +234,7 @@ $(document).ready(function () {
             }
         }
 
+        // Checks to see if the user voice input matches one of the pre programmed options and returns a boolean value
         function compare2string(x, y) {
             if (x.toLowerCase().replace(/ /g, '').replace(/'/g, '') === y.toLowerCase().replace(/ /g, '').replace(/'/g, '')) {
                 return true;
@@ -211,6 +244,12 @@ $(document).ready(function () {
         }
     }
 
+
+    // ====================================================================================================================================
+    // USE THE IPAPI TO CAPTURE THE USERS CITY VIA THEIR IP ADDRESS AND THEN USE THE GOOGLE MAPS API TO SHOW RESULTS LOCAL TO THE USER
+    // ====================================================================================================================================
+
+    // This is so a map local to the user is loaded immediately when the site is initially visited
     $.getJSON("https://ipapi.co/json/",
         function (json) {
 
@@ -219,6 +258,8 @@ $(document).ready(function () {
             $("iframe").attr("src", "https://www.google.com/maps/embed/v1/search?key=AIzaSyD0X2UTW5AczWoZ9-Wj517k9yvMZqBEeA4&q=" + city);
         });
 
+
+    // This will show results on the map after photo is uploaded and user interacts via voice with the app
     function foodMap(search) {
 
         $("#mic").css("animation", 'none');
