@@ -11,3 +11,7 @@ What does it do?
 -User responds back via voice repeating one of the options presented
 
 -App logs its suggestions based on user mood to a google map
+
+* Example
+
+![ScreenShot](assets/images/moody.png "moody")
